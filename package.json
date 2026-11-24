@@ -2,6 +2,14 @@
   "name": "comark-composer",
   "version": "0.1.0",
   "description": "Locale-aware content composition for Comark documents",
+  "homepage": "https://github.com/wswag/comark-composer#readme",
+  "bugs": {
+    "url": "https://github.com/wswag/comark-composer/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wswag/comark-composer.git"
+  },
   "keywords": [
     "comark",
     "markdown",

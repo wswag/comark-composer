@@ -13,7 +13,7 @@ The official [`comark-plugin-template`](https://github.com/comarkdown/comark-plu
 Install from a fixed Git tag after publishing the repository:
 
 ```sh
-npm install git+ssh://git@<host>/<org>/comark-composer.git#v0.1.0
+npm install git+ssh://git@github.com/wswag/comark-composer.git#v0.1.0
 ```
 
 `prepare` builds `dist/` when npm installs the package from Git, so generated files do not need to be committed. The GitHub workflow installs the checked-out repository into a clean consumer project and imports the public API. Create a fixed release tag only after CI passes. A public npm package is not required.

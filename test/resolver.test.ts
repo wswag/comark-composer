@@ -3,6 +3,7 @@ import { createContentResolver } from '../src/index.js'
 import { renderMarkdown } from 'comark/render'
 import type { ContentRepository, ResourceKey } from '../src/index.js'
 
+/** Build an in-memory repository for resolver tests. */
 function repository(files: Record<string, string>): ContentRepository {
   return {
     async load(key: ResourceKey) {

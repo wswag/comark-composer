@@ -6,6 +6,7 @@ import { createFilesystemRepository } from '../src/adapters/filesystem.js'
 
 const temporaryRoots: string[] = []
 
+/** Create a temporary directory and register it for cleanup. */
 async function tempRoot(): Promise<string> {
   const path = await mkdtemp(join(tmpdir(), 'comark-composer-'))
   temporaryRoots.push(path)
