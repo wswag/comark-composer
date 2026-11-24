@@ -1,12 +1,18 @@
 import { execFileSync } from 'node:child_process'
 import { appendFile, readFile, writeFile } from 'node:fs/promises'
 
-const title = process.env.PR_TITLE ?? ''
-const pullRequestNumber = process.env.PR_NUMBER
+let event = {}
+if (process.env.GITHUB_EVENT_PATH) {
+  event = JSON.parse(await readFile(process.env.GITHUB_EVENT_PATH, 'utf8'))
+}
+
+const title = process.env.PR_TITLE ?? event.pull_request?.title ?? ''
+const pullRequestNumber = process.env.PR_NUMBER ?? event.pull_request?.number?.toString()
 const conventionalCommitTitle = title.match(/^([a-z][a-z0-9-]*)(?:\([^)]+\))?(!)?: .+$/)
 
-if (!conventionalCommitTitle || !pullRequestNumber) {
-  throw new Error('Ein Conventional-Commit-PR-Titel und eine PR-Nummer sind erforderlich.')
+if (!pullRequestNumber) throw new Error('Die PR-Nummer fehlt (PR_NUMBER und GitHub-Event-Payload sind leer).')
+if (!conventionalCommitTitle) {
+  throw new Error(`Der PR-Titel ist kein gültiger Conventional Commit: ${JSON.stringify(title)}`)
 }
 
 const marker = `Release-PR: #${pullRequestNumber}`
@@ -27,6 +33,18 @@ if (priorRelease) {
   const packageJson = JSON.parse(await readFile('package.json', 'utf8'))
   const currentVersion = packageJson.version?.match(/^(\d+)\.(\d+)\.(\d+)$/)
   if (!currentVersion) throw new Error(`Ungültige Paketversion: ${packageJson.version}`)
+
+  const existingVersionTags = execFileSync('git', ['tag', '--list', 'v[0-9]*.[0-9]*.[0-9]*'], {
+    encoding: 'utf8',
+  }).trim()
+
+  if (!existingVersionTags) {
+    const tag = `v${packageJson.version}`
+    const commitSha = execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim()
+    await appendFile(outputPath, `tag=${tag}\ncommit_sha=${commitSha}\nskip_commit=true\n`)
+    console.log(`${packageJson.version} wird als erste Version ${tag} veröffentlicht.`)
+    process.exit(0)
+  }
 
   let [, majorText, minorText, patchText] = currentVersion
   let major = Number(majorText)
