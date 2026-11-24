@@ -28,6 +28,10 @@
     "./filesystem": {
       "types": "./dist/adapters/filesystem.d.mts",
       "default": "./dist/adapters/filesystem.mjs"
+    },
+    "./http": {
+      "types": "./dist/adapters/http.d.mts",
+      "default": "./dist/adapters/http.mjs"
     }
   },
   "main": "./dist/index.mjs",

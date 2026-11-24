@@ -239,6 +239,7 @@ src/
   diagnostics.ts
   types.ts
   adapters/filesystem.ts
+  adapters/http.ts
 tests/
   fixtures/
   unit/

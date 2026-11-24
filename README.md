@@ -32,7 +32,7 @@ Localized document:
 ```md
 ---
 id: features
-  layout: shared/features
+layout: shared/features
 title: Funktionen
 ---
 ::fragment{name="intro"}
@@ -58,10 +58,10 @@ Shared layout:
 
 ```ts
 import { createContentResolver } from 'comark-composer'
-import { createFilesystemRepository } from 'comark-composer/filesystem'
+import { createHttpRepository } from 'comark-composer/http'
 
 const resolver = createContentResolver({
-  repository: createFilesystemRepository('./content'),
+  repository: createHttpRepository({ baseUrl: '/content' }),
   fallbackLocales: ['en'],
 })
 
@@ -71,6 +71,34 @@ const result = await resolver.resolve({ id: 'features', locale: 'de' })
 ```
 
 `ContentRepository.load()` returns `null` only for a missing resource. Other errors propagate. Localized resources are tried in the requested locale and then in configured fallback order. Shared resources are loaded from `shared/` without fallback. The filesystem adapter maps IDs to `<root>/<locale>/<id>.md` and `<root>/shared/<id>.md`, rejects traversal, and checks symlink targets against the content root.
+
+### Resolution timing and Go `embed`
+
+Creating a resolver does not load content. Every `await resolver.resolve({ id, locale })` call loads the root document and then its layouts and includes on demand. The resolver does not cache responses; callers can cache at the repository or HTTP layer. Resolution state stays local to each call, so one resolver can serve concurrent locales.
+
+For an application that embeds content in a Go binary, mount the embedded `content/` directory under matching HTTP routes:
+
+```go
+import (
+    "embed"
+    "io/fs"
+    "log"
+    "net/http"
+)
+
+//go:embed content
+var embeddedContent embed.FS
+
+contentFS, err := fs.Sub(embeddedContent, "content")
+if err != nil {
+    log.Fatal(err)
+}
+mux.Handle("/content/", http.StripPrefix("/content/", http.FileServer(http.FS(contentFS))))
+```
+
+The example route shape is `GET /content/{locale}/{id}.md` for localized resources and `GET /content/shared/{id}.md` for shared resources. The adapter does not reserve or add an `/api` prefix; set `baseUrl` or `urlFor` to match the routes your application already uses. Return HTTP 404 only when the resource is absent. The HTTP adapter maps 404 to `null`, forwards response text and ETag/Last-Modified as the optional revision, and throws on other HTTP failures. Use `headers` or `credentials` for authenticated endpoints.
+
+`comark-composer/filesystem` remains available for Node.js applications and local tooling. It is not required when the application serves embedded content over HTTP.
 
 Resolver limits default to depth 32, 1,000 expansions, and 100,000 output AST nodes. Configure them with `maxDepth`, `maxExpansions`, and `maxOutputNodes`. Failures throw `CompositionError`, whose `diagnostic` contains a stable code and resource chain. Successful locale fallbacks and unused fragments are returned as diagnostics.
 

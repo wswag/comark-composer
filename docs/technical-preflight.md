@@ -39,3 +39,7 @@ Die [`comark-include`-Dokumentation](https://comark-ui.onmax.me/include/) beschr
 ## Distribution
 
 Das Template erzeugt ESM und `.d.ts` in `dist/`. Der Kern verwendet Comark als Peer-Dependency; der Node-spezifische Dateisystemadapter hat einen eigenen Export unter `comark-composer/filesystem`. Für Git-Installationen baut `prepare` die ignorierten `dist/`-Dateien. Die CI installiert den Checkout über `git+file` in einem leeren Konsumentenprojekt und importiert die öffentliche API. Die README verweist für einen festen Release-Tag auf `github.com/wswag/comark-composer`; der Tag `v0.1.0` wird nach erfolgreicher CI angelegt.
+
+## HTTP-Repository für eingebettete Inhalte
+
+Der Resolver lädt Ressourcen erst beim Aufruf von `resolve()`. `createHttpRepository()` implementiert denselben Repository-Vertrag für Browser- und Node-Fetch: standardmäßig `/{locale}/{id}.md` sowie `/shared/{id}.md` relativ zu `baseUrl`. HTTP 404 bedeutet `null`; andere HTTP-Fehler und Netzwerkfehler werden weitergegeben. `urlFor` kann das Standard-Routing ersetzen. Damit kann ein Go-Server Inhalte aus `embed.FS` ausliefern, während Comark und der Resolver im JavaScript-Client laufen. Der HTTP-Adapter hält keinen Cache; die Anwendung kann HTTP-Cache-Header oder einen Repository-Cache verwenden.
