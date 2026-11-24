@@ -4,7 +4,7 @@ Locale-aware content composition for Comark. Define a shared layout once, provid
 
 ## Status and compatibility
 
-Version `0.1.0` targets Comark `>=0.7.0 <0.8.0`, verified against Comark `0.7.x`. The package is ESM and runs on Node.js 20 or newer. The resolver core does not depend on Vue or a renderer. It uses Comark's `parseMarkdown` API and native AST tuples. `comark-include` was reviewed: it pastes filesystem files before parsing and supports relative paths and regions, but its file context and include grammar do not provide this package's resource IDs, locale fallback, inherited fragment scope, or layout contract. The resolver therefore implements its own composition over Comark ASTs, not a Markdown parser.
+The package targets Comark `>=0.7.0 <0.8.0`, verified against Comark `0.7.x`, and runs on Node.js 20 or newer. The resolver core does not depend on Vue or a renderer. It uses Comark's `parseMarkdown` API and native AST tuples. `comark-include` was reviewed: it pastes filesystem files before parsing and supports relative paths and regions, but its file context and include grammar do not provide this package's resource IDs, locale fallback, inherited fragment scope, or layout contract. The resolver therefore implements its own composition over Comark ASTs, not a Markdown parser.
 
 The official [`comark-plugin-template`](https://github.com/comarkdown/comark-plugin-template) supplies the TypeScript, ESM/declaration build, Vitest, playground and CI project structure. Comark plugins expose synchronous parser hooks; composition requires asynchronous repository access before rendering, so the stable API here is `createContentResolver()` rather than a second plugin implementation.
 
@@ -17,10 +17,16 @@ The official [`comark-plugin-template`](https://github.com/comarkdown/comark-plu
 Install from a fixed Git tag after publishing the repository:
 
 ```sh
-npm install git+ssh://git@github.com/wswag/comark-composer.git#v0.1.0
+npm install git+ssh://git@github.com/wswag/comark-composer.git#vX.Y.Z
 ```
 
-`prepare` builds `dist/` when npm installs the package from Git, so generated files do not need to be committed. The GitHub workflow installs the checked-out repository into a clean consumer project and imports the public API. Create a fixed release tag only after CI passes. A public npm package is not required.
+`prepare` builds `dist/` when npm installs the package from Git, so generated files do not need to be committed. CI installs the checked-out repository into a clean consumer project and imports the public API. Releases create fixed Git tags; a public npm package is not required.
+
+## Releases
+
+Pull request titles must use [Conventional Commits](https://www.conventionalcommits.org/), for example `feat: add resolver option`, `fix(http): handle missing content`, or `feat!: change the public API`. CI checks the title so every merged PR can be versioned automatically.
+
+When a PR merges to `main`, the release workflow increments `package.json`, commits the version bump, and creates a GitHub Release with a matching `vX.Y.Z` tag. `feat` produces a minor bump, other Conventional Commit types produce a patch bump, and `!` produces a major bump. This workflow does not publish to npm. Grant GitHub Actions permission to push to `main`; branch protection or rulesets must allow that bot commit.
 
 ## Content layout
 

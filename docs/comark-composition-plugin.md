@@ -251,7 +251,7 @@ Der Dateisystemadapter wird als separater Node-spezifischer Export angeboten; de
 Git-basierte Distribution mit festen Release-Tags, beispielsweise:
 
 ```sh
-npm install git+ssh://git@github.com/wswag/comark-composer.git#v0.1.0
+npm install git+ssh://git@github.com/wswag/comark-composer.git#vX.Y.Z
 ```
 
 Für Git-Installation muss der Build verfügbar sein: entweder versionierte Release-Artefakte im Git-Tag oder ein getesteter `prepare`-Build bei Installation. Eine Strategie verbindlich auswählen und in CI durch Installation in ein leeres Konsumentenprojekt prüfen. Keine öffentliche npm-Veröffentlichung erforderlich. Keine Zugangsdaten im Repository.

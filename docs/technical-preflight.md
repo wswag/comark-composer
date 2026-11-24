@@ -38,7 +38,7 @@ Die [`comark-include`-Dokumentation](https://comark-ui.onmax.me/include/) beschr
 
 ## Distribution
 
-Das Template erzeugt ESM und `.d.ts` in `dist/`. Der Kern verwendet Comark als Peer-Dependency; der Node-spezifische Dateisystemadapter hat einen eigenen Export unter `comark-composer/filesystem`. Für Git-Installationen baut `prepare` die ignorierten `dist/`-Dateien. Die CI installiert den Checkout über `git+file` in einem leeren Konsumentenprojekt und importiert die öffentliche API. Die README verweist für einen festen Release-Tag auf `github.com/wswag/comark-composer`; der Tag `v0.1.0` wird nach erfolgreicher CI angelegt.
+Das Template erzeugt ESM und `.d.ts` in `dist/`. Der Kern verwendet Comark als Peer-Dependency; der Node-spezifische Dateisystemadapter hat einen eigenen Export unter `comark-composer/filesystem`. Für Git-Installationen baut `prepare` die ignorierten `dist/`-Dateien. Die CI installiert den Checkout über `git+file` in einem leeren Konsumentenprojekt und importiert die öffentliche API. Nach jedem PR-Merge auf `main` aktualisiert ein GitHub-Workflow die Paketversion und legt einen passenden `vX.Y.Z`-Tag mit GitHub Release an.
 
 ## HTTP-Repository für eingebettete Inhalte
 
