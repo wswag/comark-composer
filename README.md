@@ -26,7 +26,7 @@ npm install git+ssh://git@github.com/wswag/comark-composer.git#vX.Y.Z
 
 Pull request titles must use [Conventional Commits](https://www.conventionalcommits.org/), for example `feat: add resolver option`, `fix(http): handle missing content`, or `feat!: change the public API`. CI checks the title so every merged PR can be versioned automatically.
 
-When a PR merges to `main`, the release workflow increments `package.json`, commits the version bump, and creates a GitHub Release with a matching `vX.Y.Z` tag. `feat` produces a minor bump, other Conventional Commit types produce a patch bump, and `!` produces a major bump. This workflow does not publish to npm. Grant GitHub Actions permission to push to `main`; branch protection or rulesets must allow that bot commit.
+When a PR merges to `main`, the release workflow creates a GitHub Release with a matching `vX.Y.Z` tag. The first release uses the version already in `package.json`; later releases increment it and commit the version bump. `feat` produces a minor bump, other Conventional Commit types produce a patch bump, and `!` produces a major bump. This workflow does not publish to npm. Grant GitHub Actions permission to push to `main`; branch protection or rulesets must allow that bot commit.
 
 ## Content layout
 
