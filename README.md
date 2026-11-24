@@ -8,6 +8,10 @@ Version `0.1.0` targets Comark `>=0.7.0 <0.8.0`, verified against Comark `0.7.x`
 
 The official [`comark-plugin-template`](https://github.com/comarkdown/comark-plugin-template) supplies the TypeScript, ESM/declaration build, Vitest, playground and CI project structure. Comark plugins expose synchronous parser hooks; composition requires asynchronous repository access before rendering, so the stable API here is `createContentResolver()` rather than a second plugin implementation.
 
+## Examples
+
+[`examples/go-vite`](examples/go-vite) demonstrates the full application flow: Go serves Vite-built assets and embedded Markdown, while the browser resolves a localized Comark document through HTTP and renders its native document with `@comark/html`. The template `playground/` is reserved for a compact TypeScript package demo; it is not the right place for a multi-runtime application.
+
 ## Install
 
 Install from a fixed Git tag after publishing the repository:

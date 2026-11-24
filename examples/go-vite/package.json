@@ -1,0 +1,17 @@
+{
+  "name": "comark-composer-go-vite-example",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "vite build"
+  },
+  "dependencies": {
+    "@comark/html": "^0.7.0",
+    "comark": "^0.7.0",
+    "comark-composer": "file:../.."
+  },
+  "devDependencies": {
+    "vite": "^8.1.4"
+  }
+}
