@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate pull request title
+        if: github.event_name == 'pull_request'
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: node .github/scripts/validate-pr-title.mjs
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm typecheck
+      - run: pnpm test
+      - run: pnpm build
+
+      - name: Verify Git installation in a clean consumer
+        run: |
+          mkdir -p "$RUNNER_TEMP/comark-composer-consumer"
+          cd "$RUNNER_TEMP/comark-composer-consumer"
+          npm init -y
+          npm install "git+file://$GITHUB_WORKSPACE"
+          node --input-type=module -e "import('comark-composer').then(({ createContentResolver }) => { if (typeof createContentResolver !== 'function') process.exit(1) })"

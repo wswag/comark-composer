@@ -1,0 +1,66 @@
+{
+  "name": "comark-composer",
+  "version": "0.1.0",
+  "description": "Locale-aware content composition for Comark documents",
+  "homepage": "https://github.com/wswag/comark-composer#readme",
+  "bugs": {
+    "url": "https://github.com/wswag/comark-composer/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wswag/comark-composer.git"
+  },
+  "keywords": [
+    "comark",
+    "markdown",
+    "mdc",
+    "plugin"
+  ],
+  "author": "W. Sebastian Wagner",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "default": "./dist/index.mjs"
+    },
+    "./filesystem": {
+      "types": "./dist/adapters/filesystem.d.mts",
+      "default": "./dist/adapters/filesystem.mjs"
+    },
+    "./http": {
+      "types": "./dist/adapters/http.d.mts",
+      "default": "./dist/adapters/http.mjs"
+    }
+  },
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch",
+    "play": "tsx playground/index.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc -p tsconfig.json",
+    "prepack": "npm run build",
+    "prepare": "npm run build"
+  },
+  "peerDependencies": {
+    "comark": ">=0.7.0 <0.8.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.2",
+    "comark": "^0.7.0",
+    "tsdown": "^0.23.0",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.1"
+  },
+  "packageManager": "pnpm@11.5.2",
+  "engines": {
+    "node": ">=20"
+  }
+}
